@@ -1,0 +1,43 @@
+{% extends 'admin.html' %}
+{% block content%}
+<div class="container-fluid px-4">
+    <h1 class="mt-4">Edit Organization</h1>
+    <ol class="breadcrumb mb-4">
+        <!-- <li class="breadcrumb-item"><a href="index.html">Dashboard</a></li>
+        <li class="breadcrumb-item active">Tables</li> -->
+    </ol>
+    <div class="card mb-4">
+        <div class="card-body">
+            Edit Organization
+        </div>
+    </div>
+    <div class=" mb-4">
+        <form action="" method="POST">
+            {% csrf_token %}
+            <div class="row mb-3">
+                <div class="col-md-6">
+                    <div class="form-floating mb-3 mb-md-0">
+                        {{form.organization_name.label}}
+                        {{form.organization_name}}
+                    </div>
+                    <div class="form-floating mb-3 mb-md-0">
+                        {{form.email.label}}
+                        {{form.email}}
+                    </div>
+                    <div class="form-floating mb-3 mb-md-0">
+                        {{form.phone_number.label}}
+                        {{form.phone_number}}
+                    </div>
+                </div>
+            </div>
+            <!-- <div class="mt-4 mb-0">
+                <div class="d-grid"><a class="btn btn-secondary btn-block" href="">Add Complaint</a></div>
+            </div> -->
+            <button type="submit" class="btn btn-secondary btn-block">
+                Save Changes
+            </button>
+        </form>
+    </div>
+</div>
+
+{% endblock content %}

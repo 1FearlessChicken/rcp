@@ -1,0 +1,30 @@
+{% extends 'admin.html' %}
+{% block content%}
+<div class="container-fluid px-4">
+    <h1 class="mt-4">Edit Software</h1>
+    <ol class="breadcrumb mb-4">
+    </ol>
+    <div class="card mb-4">
+        <div class="card-body">
+            Edit Software
+        </div>
+    </div>
+    <div class=" mb-4">
+        <form action="" method="POST">
+            {% csrf_token %}
+            <div class="row mb-3">
+                <div class="col-md-6">
+                    <div class="form-floating mb-3 mb-md-0">
+                        {{form.software_name.label}}
+                        {{form.software_name}}
+                    </div>
+                </div>
+            </div>
+            <button type="submit" class="btn btn-secondary btn-block">
+                Edit Software
+            </button>
+        </form>
+    </div>
+</div>
+
+{% endblock content %}

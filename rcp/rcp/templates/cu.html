@@ -1,0 +1,53 @@
+{% extends 'admin.html' %}
+{% block content%}
+<div class="container-fluid px-4">
+    <h1 class="mt-4">Create User</h1>
+    <ol class="breadcrumb mb-4">
+    </ol>
+    <div class="card mb-4">
+        <div class="card-body">
+            Add User
+        </div>
+    </div>
+    <div class=" mb-4">
+        <form action="" method="POST">
+            {% csrf_token %}
+            <div class="row mb-3">
+                <div class="col-md-6">
+                    <div class="form-floating mb-3 mb-md-0">
+                        {{form.username.label}}
+                        {{form.username}}
+                    </div>
+                    <div class="form-floating mb-3 mb-md-0">
+                        {{form.password.label}}
+                        {{form.password}}
+                    </div>
+                </div>
+                <div class="col-md-6">
+                    <div class="form-floating mb-3 mb-md-0">
+                        {{form.status.label}}
+                        {{form.status}}
+                    </div>
+                    <div class="form-floating mb-3 mb-md-0">
+                        {{form.organization.label}}
+                        {{form.organization}}
+                    </div>
+                </div>
+                <div class="col-md-6">
+                    <div class="form-floating mb-3 mb-md-0">
+                        {{form.phone_number.label}}
+                        {{form.phone_number}}
+                    </div>
+                </div>
+            </div>
+            <!-- <div class="mt-4 mb-0">
+                <div class="d-grid"><a class="btn btn-secondary btn-block" href="">Add Complaint</a></div>
+            </div> -->
+            <button type="submit" class="btn btn-secondary btn-block">
+                Add User
+            </button>
+        </form>
+    </div>
+</div>
+
+{% endblock content %}

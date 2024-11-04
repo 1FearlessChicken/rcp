@@ -1,0 +1,108 @@
+{% extends 'admin.html' %}
+{% block content%}
+<div class="container-fluid px-4">
+    <h1 class="mt-4">Complaints</h1>
+    <ol class="breadcrumb mb-4">
+        <!-- <li class="breadcrumb-item"><a href="index.html">Dashboard</a></li>
+        <li class="breadcrumb-item active">Tables</li> -->
+    </ol>
+    <!-- <div class="card mb-4">
+        <div class="card-body">
+            DataTables is a third party plugin that is used to generate the demo table below. For more information about DataTables, please visit the
+            <a target="_blank" href="https://datatables.net/">official DataTables documentation</a>
+            .
+        </div>
+    </div> -->
+    <div class="card mb-4">
+        <div class="card-header">
+            <i class="fas fa-table me-1"></i>
+            Registered Complaints
+        </div>
+        <div class="card-body">
+            <table id="datatablesSimple">
+                <thead>
+                    <tr>
+                        <th>Organization</th>
+                        <th>Complaint</th>
+                        <th>Software</th>
+                        <th>Resolution</th>
+                        <th>Date</th>
+                        <th></th>
+                    </tr>
+                </thead>
+                <tfoot>
+                    <tr>
+                        <th>Organization</th>
+                        <th>Complaint</th>
+                        <th>Software</th>
+                        <th>Resolution</th>
+                        <th>Date</th>
+                        <th></th>
+                    </tr>
+                </tfoot>
+                <tbody>
+                    {% for complaint in complaints %}
+                      <tr>
+                        <td>
+                          {{complaint.organization}}
+                        </td>
+                        <td>
+                          {{complaint.complaint}}
+                        </td>
+                        <td>
+                          {{complaint.software}}
+                        </td>
+                        <td>
+                          {{complaint.resolution}}
+                        </td>
+                        <td>
+                          {{complaint.date}}
+                        </td>
+                        <td>
+                          <a href="/deletecomplaint/{{complaint.id}}/" class="btn btn-danger btn-sm">Delete</a>
+                        </td>
+                      </tr>
+                  {% endfor  %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+{% endblock content %}
+
+
+<div class="nav">
+  <div class="sb-sidenav-menu-heading">Core</div>
+  <a class="nav-link" href="/acomplaints/">
+      <div class="sb-nav-link-icon"><i class="fas fa-dashboard"></i></div>
+      Dashboard
+  </a>
+  <div class="sb-sidenav-menu-heading">Complaints</div>
+  <a class="nav-link collapsed" href="#" data-bs-toggle="collapse" data-bs-target="#collapseLayouts" aria-expanded="false" aria-controls="collapseLayouts">
+      <div class="sb-nav-link-icon"><i class="fas fa-columns"></i></div>
+      Operations
+      <div class="sb-sidenav-collapse-arrow"><i class="fas fa-angle-down"></i></div>
+  </a>
+  <div class="collapse" id="collapseLayouts" aria-labelledby="headingOne" data-bs-parent="#sidenavAccordion">
+      <nav class="sb-sidenav-menu-nested nav">
+          <a class="nav-link" href="/complaints/">View Complaints</a>
+          <a class="nav-link" href="/addsoftware/">Softwares</a>
+          <a class="nav-link" href="/addorganizations/">Organizations</a>
+          <a class="nav-link" href="/stats1/">Software Stats</a>
+          <a class="nav-link" href="/stats2/">Organization Stats</a>
+      </nav>
+  </div>
+  <div class="sb-sidenav-menu-heading">Complaints</div>
+  <a class="nav-link collapsed" href="#" data-bs-toggle="collapse" data-bs-target="#collapseLayouts" aria-expanded="false" aria-controls="collapseLayouts">
+      <div class="sb-nav-link-icon"><i class="fas fa-columns"></i></div>
+      Authentication
+      <div class="sb-sidenav-collapse-arrow"><i class="fas fa-angle-down"></i></div>
+  </a>
+  <div class="collapse" id="collapseLayouts" aria-labelledby="headingOne" data-bs-parent="#sidenavAccordion">
+      <nav class="sb-sidenav-menu-nested nav">
+          <a class="nav-link" href="/users/">View Users</a>
+          <a class="nav-link" href="/signup/">Add Users</a>
+          <a class="nav-link" href="/asignup/">Add Admin</a>
+          <a class="nav-link" href="/aeditprofile/">Edit Profile</a>
+      </nav>
+  </div>

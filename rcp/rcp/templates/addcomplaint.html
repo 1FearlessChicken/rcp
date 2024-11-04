@@ -1,0 +1,59 @@
+{% extends 'base.html' %}
+{% block content%}
+<div class="container-fluid px-4">
+    <h1 class="mt-4">Complaints</h1>
+    <ol class="breadcrumb mb-4">
+        <!-- <li class="breadcrumb-item"><a href="index.html">Dashboard</a></li>
+        <li class="breadcrumb-item active">Tables</li> -->
+    </ol>
+    <div class="card mb-4">
+        <div class="card-body">
+            Add Complaint
+        </div>
+    </div>
+    <div class=" mb-4">
+        <form action="" method="POST">
+            {% csrf_token %}
+            <div class="row mb-3">
+                <div class="col-md-6">
+                    <div class="form-floating mb-3 mb-md-0">
+                        {{form.organization.label}}
+                        {{form.organization}}
+                    </div>
+                </div>
+                <div class="col-md-6">
+                    <div class="form-floating">
+                        {{form.resolution.label}}
+                        {{form.resolution}}
+                    </div>
+                </div>
+            </div>
+            <div class="form-floating mb-3">
+                {{form.complaint.label}}
+                {{form.complaint}}
+            </div>
+            <div class="row mb-3">
+                <div class="col-md-6">
+                    <div class="form-floating mb-3 mb-md-0">
+                        {{form.date.label}}
+                        {{form.date}}
+                    </div>
+                </div>
+                <div class="col-md-6">
+                    <div class="form-floating mb-3 mb-md-0">
+                        {{form.software.label}}
+                        {{form.software}}
+                    </div>
+                </div>
+            </div>
+            <!-- <div class="mt-4 mb-0">
+                <div class="d-grid"><a class="btn btn-secondary btn-block" href="">Add Complaint</a></div>
+            </div> -->
+            <button type="submit" class="btn btn-secondary btn-block">
+                Add Complaint
+            </button>
+        </form>
+    </div>
+</div>
+
+{% endblock content %}
