@@ -41,11 +41,13 @@
                     <tr>
                         <th>Software Name</th>
                         <th></th>
+                        <th></th>
                     </tr>
                 </thead>
                 <tfoot>
                     <tr>
                         <th>Software Name</th>
+                        <th></th>
                         <th></th>
                     </tr>
                 </tfoot>
@@ -58,6 +60,9 @@
                         <td>
                           <a href="/editsoftware/{{software.id}}/" class="btn btn-secondary btn-sm">Edit</a>
                         </td>
+                        <td>
+                            <a href="/deletesoftware/{{software.id}}/" class="btn btn-danger btn-sm">Delete</a>
+                          </td>
                       </tr>
                     {% endfor %}
                 </tbody>

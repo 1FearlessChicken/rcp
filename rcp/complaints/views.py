@@ -3,24 +3,39 @@ from django.shortcuts import get_object_or_404, redirect, render
 from .models import *
 from .forms import *
 from usermgt.views import login_required, alogin_required
+from django.db.models import Count
+from django.views.decorators.cache import never_cache
 
+
+
+@never_cache
 @login_required
 def view_complaints(request):
-    # complaints = Complaints.objects.all()
+    
     complaints = Complaints.objects.filter(owner=request.user)
     d=[]
+    
     for c in complaints:
+        
         org=Organization.objects.get(id=c.organization).organization_name
         s=Software.objects.get(id=c.software).software_name
-        a={'organization':org, 'software':s, 'complaint':c.complaint, 'date':c.date, 
-           'resolution':c.resolution, 'user':c.owner,'id':c.id}
+        a={'organization':org, 
+           'software':s, 
+           'complaint':c.complaint, 
+           'date':c.date, 
+           'resolution':c.resolution, 
+           'user':c.owner,
+           'id':c.id}
         d.append(a)
+        
     context = {
         'complaints' : d,    
     }
+    
     return render(request, 'complaints.html', context)
 
 
+@never_cache
 @alogin_required
 def aview_complaints(request):
     complaints = Complaints.objects.all()
@@ -37,6 +52,7 @@ def aview_complaints(request):
     return render(request, 'admincomplaints.html', context)
 
 
+@never_cache
 @login_required
 def add_complaint(request):
     if request.method == 'POST':
@@ -64,20 +80,22 @@ def add_complaint(request):
         return render(request,'addcomplaint.html', {'form':form})
 
 
+@never_cache
 @login_required
 def edit_complaint(request, id):
     complaint = get_object_or_404(Complaints, pk=id)
     if request.method == 'POST':
         form = complaintForm(request.POST)
         if form.is_valid():
-            organization = form.cleaned_data['organization']
-            complaint = form.cleaned_data['complaint']
-            software = form.cleaned_data['software']
-            resolution = form.cleaned_data['resolution']
+            complaint.organization = form.cleaned_data['organization']
+            complaint.complaint = form.cleaned_data['complaint']
+            complaint.software = form.cleaned_data['software']
+            complaint.resolution = form.cleaned_data['resolution']
 
-        Complaints.objects.filter(organization = organization, complaint = complaint, software = software, 
-                              resolution = resolution).update(organization = organization, complaint = complaint,                                   
-                             software = software, resolution = resolution)
+            complaint.save()
+        # Complaints.objects.filter(organization = organization, complaint = complaint, software = software, 
+        #                       resolution = resolution).update(organization = organization, complaint = complaint,                                   
+        #                      software = software, resolution = resolution)
 
         return redirect('/complaints/')
     else:
@@ -86,14 +104,16 @@ def edit_complaint(request, id):
         return render(request,'editcomplaint.html', {'form':form})
 
 
+
 @alogin_required
 def delete_complaint(request, id):
     complaint = Complaints.objects.get(pk=id)
     complaint.delete()
     
-    return redirect('complaints')
+    return redirect('acomplaints')
 
 
+@never_cache
 @alogin_required
 def add_software(request):
     
@@ -123,6 +143,7 @@ def add_software(request):
         return render(request,'addsoftware.html', {'form':form, 'softwares':d})
 
 
+@never_cache
 @alogin_required
 def edit_software(request, id):
     software = get_object_or_404(Software, pk=id)
@@ -132,9 +153,11 @@ def edit_software(request, id):
         
         if form.is_valid():
             
-            software_name = form.cleaned_data['software_name']
+            software.software_name = form.cleaned_data['software_name']
+            
+            software.save()
 
-        Complaints.objects.filter(software_name = software_name).update(software_name = software_name)
+        # Software.objects.filter(software_name = software.software_name).update(software_name = software_name)
 
         return redirect('/addsoftware/')
     else:
@@ -142,14 +165,16 @@ def edit_software(request, id):
         return render(request,'editsoftware.html', {'form':form})
 
 
+@never_cache
 @alogin_required
-def delete_software(request):
+def delete_software(request, id):
     software = Software.objects.get(pk=id)
     software.delete()
     
-    return redirect('softwares')
+    return redirect('/addsoftware/')
 
 
+@never_cache
 @alogin_required
 def add_organization(request):
     
@@ -181,6 +206,7 @@ def add_organization(request):
         return render(request,'organizations.html', {'form':form, 'organizations':d})
 
 
+@never_cache
 @alogin_required
 def edit_organization(request, id):
     organization = get_object_or_404(Organization, pk=id)
@@ -201,17 +227,55 @@ def edit_organization(request, id):
         return render(request,'editorganization.html',{'form':form})
 
 
+@never_cache
 @alogin_required
-def delete_organization(request):
+def delete_organization(request, id):
     organization = Organization.objects.get(pk=id)
     organization.delete()
     
     return redirect('organizations')
 
 
+@never_cache
+@alogin_required
+def software_count(request):
+    complaints = Complaints.objects.filter(owner=request.user)
+    d = []
 
-def stats1(request):
-    pass
+    for c in complaints:
+        org = Organization.objects.get(id=c.organization).organization_name
+        s = Software.objects.get(id=c.software).software_name
+        
+        a = {
+            'organization': org,
+            'software': s,
+            'complaint': c.complaint,
+            'date': c.date,
+            'resolution': c.resolution,
+            'user': c.owner,
+            'id': c.id
+        }
+        
+        d.append(a)
+
+    software_usage = (
+        Complaints.objects.all()
+        .values('software')
+        .annotate(count=Count('software'))
+        .order_by('-count')
+    )
+
+    software_usage = [
+        {'software': Software.objects.get(id=item['software']).software_name, 'count': item['count']}
+        for item in software_usage
+    ]
+
+    context = {
+        'complaints': d,
+        'software_usage': software_usage,
+    }
+
+    return render(request, 'complaints.html', context)
 
 
 

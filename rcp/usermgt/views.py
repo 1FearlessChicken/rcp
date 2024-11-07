@@ -31,6 +31,11 @@ def alogin_required(view_func):
 
 
 
+def home(request):
+    #Home page 
+    return render(request, 'home.html')
+
+
 @alogin_required
 def user_signup(request):
     if request.method == 'POST':
@@ -123,15 +128,15 @@ def edit_user(request, id):
         form = edituserForm(request.POST)
         
         if form.is_valid():
-            status = form.cleaned_data['status']
+            user.status = form.cleaned_data['status']
+            user.save() 
             
-        UserProfile.objects.filter(status=status).update(status=status)
-        
-        return redirect('/users/')
+            return redirect('/users/')
     
     else:
-        form = edituserForm(initial={'status':user.status})
-        return render(request, 'edituser.html', {'form':form})
+        form = edituserForm(initial={'status': user.status})
+    
+    return render(request, 'edituser.html', {'form': form})
     
 
 def admin_signup(request):
@@ -166,16 +171,18 @@ def user_login(request):
         form = login(request.POST)
         
         if form.is_valid():
+            
             username = form.cleaned_data['username']
             password = form.cleaned_data['password']
             
-            if UserProfile.objects.filter(username=username, password=password, status=status):
+            if UserProfile.objects.filter(username=username, password=password, status="active"):
                 request.session['userid'] = username
                 print('Access Granted')
                 return redirect('/complaints/')
             else:
                 varerr='Wrong Credentials, Try Again'
                 return render(request,'login.html',{'form':form,'varerr':varerr})
+            
         else:
             return render(request,'login.html',{'form':form})
         
@@ -212,7 +219,8 @@ def logout(request):
     try:
         del request.session['userid']
     except:
-        return redirect('/login/')
+        pass
+    return redirect('/login/')
 
 
 @alogin_required
@@ -227,7 +235,6 @@ def alogout(request):
 @alogin_required
 def users(request):
     users = UserProfile.objects.all()
-    # admins = AdminProfile.objects.all()
     
     d=[]
     for c in users:
@@ -236,15 +243,9 @@ def users(request):
         a={'username':c.username, 'status':c.status, 'organization':org,
            'phone_number':c.phone_number,'id':c.id}
         d.append(a)
-    
-    # e=[]
-    # for admin in admins:
-    #     a={'username':admin.username, 'status':admin.status, 'id':admin.id}
-    #     e.append(a)
         
     context = {
         'users' : d,    
-        # 'admins' : e,
     }
     
     return render(request, 'users.html', context)
